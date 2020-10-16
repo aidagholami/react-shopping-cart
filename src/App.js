@@ -9,33 +9,46 @@ class App extends Component {
     super();
     this.state = {
       products: data.products,
-      size: '',
-      sort: ''
+      currentAction: {
+        size: '',
+        sort: ''
+      }
     }
   }
-  filterProducts = (event) => {
-    if (event.target.value === '') {
-      this.setState({
-        size: event.target.value,
-        products: data.products
-      });
-    } else {
-      this.setState({
-        size: event.target.value,
-        products: data.products.filter(p => p.availableSizes.indexOf(event.target.value) >= 0)
-      });
-    }
-  }
-  sortProducts = (event) => {
-    const sort = event.target.value;
-    this.setState(state => ({
-      sort: sort,
-      products: state.products.slice().sort((a, b) => (
-        sort === 'lowest' ? ((a.price > b.price)? 1 : -1):
-        sort === 'highest' ? ((a.price < b.price)? 1 : -1):
-        ((a._id < b._id)? 1 : -1)
+  filter = (event) => {
+    const action = event.target.id;
+
+    if (action === 'size') {
+      const size = event.target.value;
+      this.setState(prevState => (
+        {
+          currentAction: {
+            size: size,
+            sort: prevState.currentAction.sort,
+          },
+          products: data.products.slice().filter(p => p.availableSizes.indexOf(size) >= 0).sort((a, b) => (
+            prevState.currentAction.sort === 'lowest' ? ((a.price > b.price)? 1 : -1):
+            prevState.currentAction.sort === 'highest' ? ((a.price < b.price)? 1 : -1):
+            ((a._id < b._id)? 1 : -1)
+          ))
+        }
       ))
-    }));
+    } else if (action === 'sort') {
+      const sort = event.target.value;
+      this.setState(prevState => (
+        {
+          currentAction: {
+            size: prevState.currentAction.size,
+            sort: sort
+          },
+          products: data.products.slice().filter(p => p.availableSizes.indexOf(prevState.currentAction.size) >= 0).sort((a, b) => (
+            sort === 'lowest' ? ((a.price > b.price)? 1 : -1):
+            sort === 'highest' ? ((a.price < b.price)? 1 : -1):
+            ((a._id < b._id)? 1 : -1)
+          ))
+        }
+      ))
+    }
   }
 
   render() {
@@ -51,8 +64,8 @@ class App extends Component {
               count={this.state.products.length} 
               size={this.state.size} 
               sort={this.state.sort} 
-              filterProducts={this.filterProducts} 
-              sortProducts={this.sortProducts}></Filter>
+              filterProducts={this.filter} 
+              sortProducts={this.filter}></Filter>
               <Products products={this.state.products}></Products>
             </div>
             <div className="sidebar">
