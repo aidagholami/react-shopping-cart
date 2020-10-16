@@ -96,9 +96,11 @@ footer {
   justify-content: space-between;
   align-items: center;
 }
+.product-price div {
+  font-size: 2rem;
+}
 .product-price div,
 .product-price button {
-  font-size: 2rem;
   flex: 1;
 }
 .button {
@@ -123,5 +125,50 @@ footer {
   margin: 1rem;
 }
 .filter div {
+  flex: 1;
+}
+
+/* Cart */
+.cart {
+  padding: 1rem;
+  margin: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  line-height: 2.3rem;
+}
+.cart-header {
+  border-bottom: 0.1rem solid #c0c0c0;
+}
+.cart-items {
+  padding: 0;
+  width: 100%;
+  list-style-type: none;
+}
+.cart-items img {
+  width: 5rem;
+}
+.cart-items li {
+  display: flex;
+}
+.cart-items li div {
+  padding: 0.5rem;
+}
+.cart-items li div:last-child {
+  flex: 1;
+}
+.right {
+  text-align: right;
+}
+.total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.total > div {
+  font-size: 2rem;
+}
+.total > div,
+.total > button {
   flex: 1;
 }
