@@ -1,12 +1,18 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const shortid = require('shortid');
+import express from 'express';
+import dotenv from 'dotenv';
+import config from './config';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import shortid from 'shortid';
+
+dotenv.config();
+
+const mongodbUrl = config.MONGODB_URL;
 
 const app = express();
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb+srv://dada-api:dadaapi@cluster0.doocu.mongodb.net/react-shopping-cart-db?retryWrites=true || mongodb://localhost/react-shopping-cart-db', {
+mongoose.connect(mongodbUrl, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true
