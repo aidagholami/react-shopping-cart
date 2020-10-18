@@ -190,3 +190,26 @@ input {
   padding: 1rem;
   border: 0.1rem solid #c0c0c0;
 }
+/* Product Details */
+.product-details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-height: 96vh;
+}
+.product-details img {
+  max-height: 100vh;
+  max-width: 46rem;
+  margin: 0 auto;
+  align-items: center;
+}
+.product-details-description {
+  flex: 1 1;
+  margin: 1rem;
+}
+.close-modal {
+  position: absolute;
+  right: 1rem;
+  top: 2.5rem;
+  z-index: 10;
+}
