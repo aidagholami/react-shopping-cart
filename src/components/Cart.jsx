@@ -44,7 +44,7 @@ class Cart extends Component {
     return (
       <div>
         {
-          cartItems.length === 0 ? <div className="cart cart-header">Cart is empty.</div>
+          (cartItems.length === 0 || order === null) ? <div className="cart cart-header">Cart is empty.</div>
           :
           <div className="cart cart-header">
             You have {cartItems.reduce((a, c) => a + c.count, 0)} items in the cart {' '}
@@ -90,6 +90,8 @@ class Cart extends Component {
             </Zoom>
           </Modal>
         }
+        {
+          order !== null &&
         <div>
           <div className="cart">
             <Fade left cascade>
@@ -150,6 +152,7 @@ class Cart extends Component {
             </div>
           )}
         </div>
+        }
       </div>
     )
   }
