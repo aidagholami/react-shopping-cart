@@ -5,7 +5,7 @@ import {
 } from '../types';
 
 export const createOrder = (order) => (dispatch) => {
-  fetch('/api/orders', {
+  fetch('https://portfolio-shopping-cart.herokuapp.com/api/orders', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
