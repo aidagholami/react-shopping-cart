@@ -236,8 +236,25 @@ input {
 .success-message {
   color: green;
 }
+.summery-message {
+  color: #ff8000;
+}
 @media only screen and (max-width: 480px) {
   .filter div {
     flex: 0;
+  }
+  .order-details ul {
+    width: 100%;
+    padding: 0;
+  }
+  .order-details li div {
+    padding: 10px 0;
+    width: 100%;
+  }
+  .zoid-outlet {
+    width: 100% !important;
+  }
+  .product-details img {
+    width: 100%;
   }
 }

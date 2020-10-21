@@ -25,7 +25,7 @@ class App extends Component {
             </div>
           </main>
           <footer>
-            All right is reserved.
+            All rights are reserved.
           </footer>
         </div>
       </Provider>
