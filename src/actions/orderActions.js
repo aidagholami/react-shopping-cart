@@ -1,6 +1,5 @@
 import { 
   CLEAR_ORDER,
-  CLEAR_SHOPPING_CART,
   CREATE_ORDER
 } from '../types';
 
@@ -14,11 +13,10 @@ export const createOrder = (order) => (dispatch) => {
   }).then(res => res.json())
   .then(data => {
     dispatch({ type: CREATE_ORDER, payload: data });
-    localStorage.clear('cartItems');
-    dispatch({ type: CLEAR_SHOPPING_CART })
   });
 };
 
 export const clearOrder = () => (dispatch) => {
+  localStorage.clear('cartItems');
   dispatch({ type: CLEAR_ORDER })
 }

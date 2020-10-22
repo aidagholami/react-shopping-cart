@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import formatCurrency from '../util';
 import Fade from 'react-reveal/Fade';
 import { connect } from 'react-redux';
-import { removeFromCart } from '../actions/cartActions';
+import { removeFromCart, clearShoppingCart } from '../actions/cartActions';
 import { createOrder, clearOrder } from '../actions/orderActions';
 import Zoom from 'react-reveal/Zoom';
 import Modal from 'react-modal';
@@ -16,6 +16,13 @@ class Cart extends Component {
       address: '',
       showCheckout: false
     };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log('props:', this.props)
+    console.log('state:', this.state)
+    console.log('prevProps:', prevProps)
+    console.log('prevState:', prevState)
   }
 
   handleInput = (e) => {
@@ -32,10 +39,12 @@ class Cart extends Component {
       total: this.props.cartItems.reduce((a, c) => a + c.price * c.count, 0)
     }
     this.props.createOrder(order);
+    this.props.clearShoppingCart();
   }
 
   closeModal = () => {
     this.props.clearOrder()
+    this.setState({ showCheckout: false })
   }
 
   render() {
@@ -44,7 +53,7 @@ class Cart extends Component {
     return (
       <div>
         {
-          (cartItems.length === 0 || order === null) ? <div className="cart cart-header">Cart is empty.</div>
+          (cartItems === null || cartItems.length === 0) ? <div className="cart cart-header">Cart is empty.</div>
           :
           <div className="cart cart-header">
             You have {cartItems.reduce((a, c) => a + c.count, 0)} items in the cart {' '}
@@ -52,7 +61,7 @@ class Cart extends Component {
         }
         {
           order && 
-          <Modal isOpen={true} onRequestClose={this.closeModal}>
+          <Modal isOpen={true} onRequestClose={this.closeModal} ariaHideApp={false}>
             <Zoom>
               <button className="close-modal" onClick={this.closeModal}>x</button>
               <div className="order-details">
@@ -91,7 +100,8 @@ class Cart extends Component {
           </Modal>
         }
         {
-          order !== null &&
+          // order !== null &&
+          cartItems !== null &&
         <div>
           <div className="cart">
             <Fade left cascade>
@@ -164,6 +174,7 @@ export default connect((state) => ({
 }),
 { 
   removeFromCart,
+  clearShoppingCart,
   createOrder,
   clearOrder
 }

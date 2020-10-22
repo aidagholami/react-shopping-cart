@@ -48,7 +48,7 @@ class Products extends Component {
                       <div>
                         {formatCurrency(product.price)}
                       </div>
-                      <button className="button primary" onClick={() => this.props.addToCart(product)}>Add To Cart</button>
+                      <button className="button primary" onClick={() => { this.props.addToCart(product)} }>Add To Cart</button>
                     </div>
                   </div>
                 </li>
@@ -58,7 +58,7 @@ class Products extends Component {
         </Fade>
         {
           product && 
-          <Modal isOpen={true} onRequestClose={this.closeModal}>
+          <Modal isOpen={true} onRequestClose={this.closeModal} ariaHideApp={false}>
             <Zoom>
               <button className='close-modal' onClick={this.closeModal}>x</button>
               <div className="product-details">
