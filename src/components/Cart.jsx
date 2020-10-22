@@ -15,14 +15,13 @@ class Cart extends Component {
       name: '',
       email: '',
       address: '',
-      showCheckout: false,
-      paid: false
+      showCheckout: false
     };
   }
 
-  componentWillMount() {
-    Modal.setAppElement('body');
-  }
+  // componentWillMount() {
+  //   Modal.setAppElement('body');
+  // }
   // componentDidUpdate(prevProps, prevState) {
   //   // console.log('props:', this.props)
   //   // console.log('state:', this.state)
@@ -43,24 +42,26 @@ class Cart extends Component {
       cartItems: this.props.cartItems,
       total: this.props.cartItems.reduce((a, c) => a + c.price * c.count, 0)
     }
-    this.setState({ paid: false })
     this.props.showOrder(order);
   }
 
   createOrder = (payment) => {
-    const order = {
-      name: this.props.order.name,
-      email: this.props.order.email,
-      address: this.props.order.address,
-      cartItems: this.props.cartItems,
-      total: this.props.cartItems.reduce((a, c) => a + c.price * c.count, 0)
-    }
     if (payment && payment.paid) {
+      const order = {
+        name: this.state.name,
+        email: this.state.email,
+        address: this.state.address,
+        cartItems: this.props.cartItems,
+        total: this.props.cartItems.reduce((a, c) => a + c.price * c.count, 0),
+        // cancelled: payment.cancelled,
+        paid: payment.paid,
+        payerID: payment.payerID,
+        paymentID: payment.paymentID,
+        paymentToken: payment.paymentToken,
+        returnUrl: payment.returnUrl
+      }
       this.props.createOrder(order);
       this.props.clearShoppingCart();
-      this.setState({
-        paid: true
-      });
       console.log("The payment was succeeded!", payment);
     }
   }
@@ -90,11 +91,21 @@ class Cart extends Component {
           order && 
           <Modal isOpen={true} onRequestClose={this.closeModal} ariaHideApp={false}>
             <Zoom>
-               {this.state.paid ? (
+               {order && order.paid ? (
                 <div>
                   <button className="close-modal" onClick={this.closeConfirmation}>x</button>
                   <div className="order-details">
                     <h3 className="success-message">Your order has been placed.</h3>
+                    <ul>
+                      <li>
+                        <div>payer ID</div>
+                        <div>{order.payerID}</div>
+                      </li>
+                      <li>
+                        <div>payment ID</div>
+                        <div>{order.paymentID}</div>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               ) :    
