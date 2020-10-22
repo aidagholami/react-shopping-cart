@@ -1,9 +1,12 @@
+Cart.jsx
+
+
 import React, { Component } from 'react'
 import formatCurrency from '../util';
 import Fade from 'react-reveal/Fade';
 import { connect } from 'react-redux';
-import { removeFromCart, clearShoppingCart } from '../actions/cartActions';
-import { createOrder, clearOrder, closeSummery, showOrder } from '../actions/orderActions';
+import { removeFromCart, showCart } from '../actions/cartActions';
+import { createOrder, clearOrder, showOrder, closeSummery } from '../actions/orderActions';
 import Zoom from 'react-reveal/Zoom';
 import Modal from 'react-modal';
 import PayPal from './PayPal';
@@ -15,20 +18,24 @@ class Cart extends Component {
       name: '',
       email: '',
       address: '',
+      // cartItems: [],
+      // total: 0,
       showCheckout: false,
       paid: false
     };
   }
 
+  componentDidUpdate() {
+    debugger;
+    const order = {
+      cartItems: this.props.showCart
+    };
+    this.props.showCart();
+  }
+
   componentWillMount() {
     Modal.setAppElement('body');
   }
-  // componentDidUpdate(prevProps, prevState) {
-  //   // console.log('props:', this.props)
-  //   // console.log('state:', this.state)
-  //   // console.log('prevProps:', prevProps)
-  //   // console.log('prevState:', prevState)
-  // }
 
   handleInput = (e) => {
     this.setState({ [e.target.name]: e.target.value })
@@ -43,10 +50,10 @@ class Cart extends Component {
       cartItems: this.props.cartItems,
       total: this.props.cartItems.reduce((a, c) => a + c.price * c.count, 0)
     }
-    this.setState({ paid: false })
+    // this.props.createOrder(order);
     this.props.showOrder(order);
   }
-
+  
   createOrder = (payment) => {
     const order = {
       name: this.props.order.name,
@@ -57,9 +64,13 @@ class Cart extends Component {
     }
     if (payment && payment.paid) {
       this.props.createOrder(order);
-      this.props.clearShoppingCart();
       this.setState({
-        paid: true
+        paid: true,
+        // name: order.name,
+        // email: order.email,
+        // address: order.address,
+        // cartItems: this.props.cartItems,
+        // total: this.props.cartItems.reduce((a, c) => a + c.price * c.count, 0)
       });
       console.log("The payment was succeeded!", payment);
     }
@@ -70,8 +81,8 @@ class Cart extends Component {
   }
 
   closeConfirmation = () => {
+    debugger;
     this.props.clearOrder()
-    this.setState({ showCheckout: false })
   }
 
   render() {
@@ -80,7 +91,7 @@ class Cart extends Component {
     return (
       <div>
         {
-          (cartItems === null || cartItems.length === 0) ? <div className="cart cart-header">Cart is empty.</div>
+          ((cartItems.length === 0 && this.state.paid) || (cartItems.length === 0 && order === null)) ? <div className="cart cart-header">Cart is empty.</div>
           :
           <div className="cart cart-header">
             You have {cartItems.reduce((a, c) => a + c.count, 0)} items in the cart {' '}
@@ -88,57 +99,75 @@ class Cart extends Component {
         }
         {
           order && 
-          <Modal isOpen={true} onRequestClose={this.closeModal} ariaHideApp={false}>
-            <Zoom>
-               {this.state.paid ? (
+          <Modal isOpen={true} onRequestClose={this.closeModal}>
+            <Zoom>     
+              {this.state.paid ? (
                 <div>
                   <button className="close-modal" onClick={this.closeConfirmation}>x</button>
                   <div className="order-details">
                     <h3 className="success-message">Your order has been placed.</h3>
                   </div>
-                </div>
-              ) :    
+                </div>)
+                :    
               (
               <div>
-                <button className="close-modal" onClick={this.closeModal}>x</button>
-                <div className="order-details">
-                  <h3 className="summery-message">Summery of your Order</h3>
-                  <ul>
-                    <li>
-                      <div>Name:</div>
+              <button className="close-modal" onClick={this.closeModal}>x</button>
+              <div className="order-details">
+                {/* {order && order.total !== 0 && ( */}
+                {order && (
+                  <div>
+                    <h3 className="summery-message">Summery of your Order</h3>
+                  </div> 
+                )}
+                
+                <ul>
+                  <li>
+                    <div>Name:</div>
                       <div>{order.name}</div>
-                    </li>
-                    <li>
-                      <div>Email:</div>
+                  </li>
+                  <li>
+                    <div>Email:</div>
                       <div>{order.email}</div>
-                    </li>
-                    <li>
-                      <div>Address:</div>
+                  </li>
+                  <li>
+                    <div>Address:</div>
                       <div>{order.address}</div>
-                    </li>
+                  </li>
+                  {/* {order && order.total === 0 &&  */}
+                  {order && 
                     <li>
-                      <div>Total:</div>
-                      <div>{formatCurrency(order.total)}</div>
+                      <div>Date:</div>
+                      <div>{order.created_at}</div>
                     </li>
-                    <li>
-                      <div>Cart Items:</div>
-                      <div>{order.cartItems.map(x => (
-                        <div key={x._id}>{x.count} {' x '} {x.title}</div>
-                      ))}</div>
-                    </li>
-                    <li>
-                        <PayPal onSuccess={this.createOrder}/>
-                    </li>
-                  </ul>
-                </div>
+                  }
+                  <li>
+                    <div>Total:</div>
+                    <div>{formatCurrency(order.total)}</div>
+                    {/* <div>{order.total && formatCurrency(order.total)}</div> */}
+                  </li>
+                  <li>
+                    <div>Cart Items:</div>
+                    <div>{order.cartItems.map(x => (
+                      <div key={x._id}>{x.count} {' x '} {x.title}</div>
+                      ))}
+                    </div>
+                    {/* <div>{order.cartItems != null && order.cartItems.length !== 0 && order.cartItems.map(x => (
+                      <div key={x._id}>{x.count} {' x '} {x.title}</div>
+                      ))}
+                    </div> */}
+                  </li>
+                  <li>
+                    <PayPal onSuccess={this.createOrder}/>
+                  </li>
+                </ul>
               </div>
-              )}
+              </div>)}
+
             </Zoom>
           </Modal>
         }
         {
-          // order !== null &&
-          cartItems !== null &&
+          order !== null &&
         <div>
           <div className="cart">
             <Fade left cascade>
@@ -151,7 +180,7 @@ class Cart extends Component {
                     <div>
                       <div>{item.title}</div>
                       <div className="right">
-                        {formatCurrency(item.price)} x {item.count} {' '}
+                        {item.price && formatCurrency(item.price)} x {item.count} {' '}
                         <button className="button secondary" onClick={() => this.props.removeFromCart(item)}>Remove</button>
                       </div>
                     </div>
@@ -211,10 +240,10 @@ export default connect((state) => ({
 }),
 { 
   removeFromCart,
-  clearShoppingCart,
+  showCart,
   createOrder,
   clearOrder,
-  closeSummery,
-  showOrder
+  showOrder,
+  closeSummery
 }
 )(Cart);
