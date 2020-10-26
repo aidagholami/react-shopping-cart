@@ -16,7 +16,7 @@ export const createOrder = (order) => (dispatch) => {
   .then(data => {
     dispatch({ type: CREATE_ORDER, payload: data });
   })
-  .catch(error => console.log('aida', error));
+  .catch(error => console.log(error));
 };
 
 export const clearOrder = () => (dispatch) => {

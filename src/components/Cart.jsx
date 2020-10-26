@@ -19,16 +19,6 @@ class Cart extends Component {
     };
   }
 
-  // componentWillMount() {
-  //   Modal.setAppElement('body');
-  // }
-  // componentDidUpdate(prevProps, prevState) {
-  //   // console.log('props:', this.props)
-  //   // console.log('state:', this.state)
-  //   // console.log('prevProps:', prevProps)
-  //   // console.log('prevState:', prevState)
-  // }
-
   handleInput = (e) => {
     this.setState({ [e.target.name]: e.target.value })
   }
@@ -138,7 +128,7 @@ class Cart extends Component {
                       ))}</div>
                     </li>
                     <li>
-                        <PayPal onSuccess={this.createOrder}/>
+                        <PayPal onSuccess={this.createOrder} total={order.total}/>
                     </li>
                   </ul>
                 </div>
